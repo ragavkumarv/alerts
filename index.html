@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Alerts Simple</title>
+  <style>
+      ul{
+        list-style: none;
+      }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.24.1/ramda.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js"></script>
+
+<script>
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var _R = R,
+    reduce = _R.reduce,
+    curry = _R.curry,
+    compose = _R.compose,
+    trim = _R.trim,
+    head = _R.head,
+    match = _R.match,
+    map = _R.map,
+    reduceBy = _R.reduceBy,
+    forEachObjIndexed = _R.forEachObjIndexed;
+
+
+var log = console.log;
+var headMatch = function headMatch(x) {
+    return compose(head, match(x));
+};
+var resObj = function resObj(str) {
+    return { incs: headMatch(/INC\d\s\w\d/)(str), gp: headMatch(/\b[a-z]/)(str) };
+};
+var inClean = compose(map(resObj), map(trim), match(/INC.+?(?=INC)|INC.+?(?=$)/g));
+var reduceToIdBy = reduceBy(function (acc, alertGp) {
+    return [].concat(_toConsumableArray(acc), [alertGp.incs]);
+}, []);
+var incsByGroup = reduceToIdBy(function (alertGp) {
+    return alertGp.gp;
+});
+var printKeyConcatValue = function printKeyConcatValue(value, key) {
+    log(key, '\n');map(log)(value);log('\n');
+};
+
+// const fun = () => {
+var InStr = 'INC1 F1 c INC2 F2 b INC3 F3 b INC4 F4 e INC4 F4 c';
+// const Instr = document.getElementById("inc");
+// const InClean = inClean(InStr);
+// const IncsByGroup = incsByGroup(InClean);
+log('============START============='
+// forEachObjIndexed(printKeyConcatValue,IncsByGroup);
+);log('============END==============='
+// }
+// const InStr = `INC1 F1 c INC2 F2 b INC3 F3 b INC4 F4 e INC4 F4 c`;
+
+);
+var Inc = function (_React$Component) {
+    _inherits(Inc, _React$Component);
+
+    function Inc() {
+        _classCallCheck(this, Inc);
+
+        return _possibleConstructorReturn(this, (Inc.__proto__ || Object.getPrototypeOf(Inc)).apply(this, arguments));
+    }
+
+    _createClass(Inc, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                gp = _props.gp,
+                incs = _props.incs;
+            // log(IncsByGroup)
+
+            console.log(incs);
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'h2',
+                    null,
+                    gp
+                ),
+                React.createElement(
+                    'ul',
+                    null,
+                    incs.map(function (inc) {
+                        return React.createElement(
+                            'li',
+                            null,
+                            inc
+                        );
+                    })
+                )
+            );
+        }
+    }]);
+
+    return Inc;
+}(React.Component);
+
+var Home = function (_React$Component2) {
+    _inherits(Home, _React$Component2);
+
+    function Home() {
+        _classCallCheck(this, Home);
+
+        var _this2 = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
+
+        _this2.state = {
+            alerts: {}
+        };
+
+        // bind addTodo once in constructor
+        _this2.addTodo = _this2.addTodo.bind(_this2);
+        return _this2;
+    }
+
+    // addTodo will receive the needed value without refs
+
+
+    _createClass(Home, [{
+        key: 'addTodo',
+        value: function addTodo(alerts) {
+            console.log('reached', alerts);
+            var InClean = inClean(alerts);
+            var IncsByGroup = incsByGroup(InClean);
+            this.setState({ alerts: IncsByGroup });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(InputForm, { onSubmit: this.addTodo }),
+                React.createElement(IncList, { alerts: this.state.alerts })
+            );
+        }
+    }]);
+
+    return Home;
+}(React.Component);
+
+var IncList = function (_React$Component3) {
+    _inherits(IncList, _React$Component3);
+
+    function IncList() {
+        _classCallCheck(this, IncList);
+
+        return _possibleConstructorReturn(this, (IncList.__proto__ || Object.getPrototypeOf(IncList)).apply(this, arguments));
+    }
+
+    _createClass(IncList, [{
+        key: 'render',
+        value: function render() {
+            var alerts = this.props.alerts;
+            return React.createElement(
+                'section',
+                { id: 'hello-world' },
+                Object.keys(alerts).map(function (keyName, keyIndex) {
+
+                    return React.createElement(Inc, { gp: keyName, incs: alerts[keyName] });
+                })
+            );
+        }
+    }]);
+
+    return IncList;
+}(React.Component);
+
+var InputForm = function (_React$Component4) {
+    _inherits(InputForm, _React$Component4);
+
+    function InputForm(props) {
+        _classCallCheck(this, InputForm);
+
+        // bind onSubmit and onInput
+        var _this4 = _possibleConstructorReturn(this, (InputForm.__proto__ || Object.getPrototypeOf(InputForm)).call(this, props));
+
+        _this4.onSubmit = _this4.onSubmit.bind(_this4);
+        _this4.onInput = _this4.onInput.bind(_this4);
+
+        // init state
+        _this4.state = {
+            input: ''
+        };
+        return _this4;
+    }
+
+    // input change handler
+
+
+    _createClass(InputForm, [{
+        key: 'onInput',
+        value: function onInput(e) {
+            this.setState({
+                input: e.target.value
+            });
+        }
+
+        // submit handler
+
+    }, {
+        key: 'onSubmit',
+        value: function onSubmit() {
+            console.log('new', this.state.input);
+            this.props.onSubmit(this.state.input);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement('input', {
+                    // use value and onChange so it will be a controlled component
+                    value: this.state.value,
+                    onChange: this.onInput,
+                    type: 'text',
+                    placeholder: 'Type your text here' }),
+                React.createElement(
+                    'button',
+                    { onClick: this.onSubmit },
+                    'Add to list'
+                )
+            );
+        }
+    }]);
+
+    return InputForm;
+}(React.Component);
+// const numbers = {1:'raga',2:'2',4:'4'}
+
+// const numbers = [1,2,3]
+
+
+ReactDOM.render(React.createElement(Home, null), document.getElementById('app')
+// {map(inc => { return <Inc inc={inc}/> })(gps) }
+);
+</script>
+</html>
